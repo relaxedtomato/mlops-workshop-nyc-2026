@@ -1,0 +1,9 @@
+envs:
+  # S3 Configuration
+  S3_ENDPOINT_URL: "<your-s3-endpoint>"
+  S3_REGION: "<your-region>"
+
+  # LLM Configuration
+  LLM_ENDPOINT: "<your-llm-endpoint>"
+  MODEL_NAME: "<your-model-name>"
+  MAX_TOKENS: "512"
