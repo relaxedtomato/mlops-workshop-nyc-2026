@@ -16,7 +16,7 @@ An end-to-end video semantic search (VSS) pipeline on VAST DataEngine:
 | [Lab 1](labs/lab1-hello-world/) | Hello Vast Data |
 | [Lab 2](labs/lab2-s3-connect/) | Connect to S3 |
 | [Lab 3](labs/lab3-llm-connect/) | Read from S3 + LLM Summarize |
-| Lab 4 | Video Ingest |
+| [Lab 4](labs/lab4-video-ingest/) | Video Ingest |
 | Lab 5 | VLM + VastDB |
 | Lab 6 | Search Endpoint |
 | CYOA | Agent Offramp |
