@@ -1,0 +1,7 @@
+# S3 Configuration
+S3_ENDPOINT_URL: "<your-s3-endpoint>"
+S3_REGION: "<your-region>"
+
+# Video segmentation
+SEGMENT_DURATION: "5"
+OUTPUT_BUCKET: "<your-output-bucket>"
