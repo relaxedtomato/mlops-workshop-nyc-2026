@@ -130,7 +130,7 @@ debug_frames/
 # Image files
 *.jpg
 *.jpeg
-*.png
+# *.png
 *.gif
 *.webp
 
