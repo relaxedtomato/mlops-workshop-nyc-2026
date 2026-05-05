@@ -35,7 +35,7 @@ def init(ctx):
     ctx.llm_client = LLMClient(
         endpoint=os.environ.get('LLM_ENDPOINT'),
         api_key=secrets.get("LLM_API_KEY", ""),
-        model=os.environ.get('MODEL_NAME', 'gpt-4o-mini'),
+        model=os.environ.get('MODEL_NAME', 'gpt-4o-mini'),  # TODO: update default to workshop model
         max_tokens=int(os.environ.get('MAX_TOKENS', '512')),
     )
     ctx.logger.info(f"✅ LLM client initialized → {os.environ.get('LLM_ENDPOINT')}")

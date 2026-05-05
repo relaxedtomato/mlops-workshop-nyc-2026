@@ -103,8 +103,8 @@ def init(ctx):
 
     validate_config(
         ctx,
-        required_envs=["S3_ENDPOINT_URL", "S3_REGION"],
-        required_secrets=["S3_ACCESS_KEY", "S3_SECRET_KEY"],
+        required_envs=["S3_ENDPOINT_URL", "S3_REGION", "LLM_ENDPOINT", "MODEL_NAME"],
+        required_secrets=["S3_ACCESS_KEY", "S3_SECRET_KEY", "LLM_API_KEY"],
         secrets=secrets,
     )
 
@@ -139,13 +139,16 @@ ctx.logger.info(f"✅ File fetched — size: {response['ContentLength']} bytes, 
 
 #### 2c. Configure and deploy
 
-Before deploying, set up all environment variables and secrets now — both S3 and LLM — so you won't need to redeploy after Step 3.
+Before deploying, set up all environment variables and secrets now (both S3 and LLM) so you won't need to redeploy after Step 3.
 
-Copy the config templates and fill in your values:
+**Environment Variables**
+
+Copy the config template and fill in your values:
+
+> **TODO:** Add instructions for how to retrieve S3 and LLM credentials in the workshop environment (endpoint URLs, access keys, API key).
 
 ```sh
 cp config.example.yaml config.yaml
-cp secrets.example.yaml secrets.yaml
 ```
 
 Update `config.yaml`:
@@ -158,6 +161,14 @@ MODEL_NAME: "<your-model-name>"
 MAX_TOKENS: "512"
 ```
 
+**Secrets**
+
+Copy the secrets template and fill in your values:
+
+```sh
+cp secrets.example.yaml secrets.yaml
+```
+
 Update `secrets.yaml`:
 
 ```yaml
@@ -167,7 +178,9 @@ secrets:
   LLM_API_KEY: "<your-llm-api-key>"
 ```
 
-Deploy following the same pattern from Lab 1. Build, tag, and push:
+**Function**
+
+Build, tag, and push following the same pattern from Lab 1:
 
 ```sh
 vastde functions build $USER-s3-llm-summary
@@ -197,6 +210,8 @@ VRN: vast:dataengine:functions:$USER-s3-llm-summary
 Last Revision: 1
 ```
 
+**Trigger**
+
 Create a new S3 element trigger for this pipeline. Navigate to **DataEngine UI > Triggers > Create Trigger** and fill in:
 
 | Field | Example value |
@@ -206,7 +221,13 @@ Create a new S3 element trigger for this pipeline. Navigate to **DataEngine UI >
 | **Source View** | select your S3 bucket |
 | **Element Type** | `Element Created` |
 
-Then create and deploy the pipeline from the UI using `pipeline-config.yaml` as a reference (same flow as Lab 1 Steps 6-7).
+**Pipeline**
+
+Create and deploy the pipeline from the UI using `pipeline-config.yaml` as a reference (same flow as Lab 1 Steps 6-7).
+
+![Pipeline config and secrets](pipeline-config-secrets.png)
+
+When setting up the pipeline, add the environment variables from `config.yaml` under `Environment Variables` and upload `secrets.yaml` under `Secrets`. Once configured, click **Deploy** and wait for `Ready` status before proceeding.
 
 #### 2d. Upload a file and verify
 
@@ -288,7 +309,7 @@ def init(ctx):
     ctx.llm_client = LLMClient(
         endpoint=os.environ.get('LLM_ENDPOINT'),
         api_key=secrets.get("LLM_API_KEY", ""),
-        model=os.environ.get('MODEL_NAME', 'gpt-4o-mini'),
+        model=os.environ.get('MODEL_NAME', 'gpt-4o-mini'),  # TODO: update default to workshop model
         max_tokens=int(os.environ.get('MAX_TOKENS', '512')),
     )
     ctx.logger.info(f"✅ LLM client initialized → {os.environ.get('LLM_ENDPOINT')}")
@@ -324,7 +345,7 @@ docker push $DE_REG_HOST/$DE_REG_USER/$USER-s3-llm-summary:v2
 
 Then update the function revision in the UI.
 
-> **Hint:** We covered function revisions in Lab 2 Step 1a. Navigate to **DataEngine UI > Functions > `$USER-s3-llm-summary` > Revision Details** and update the `Image Tag` to `v2`. Then go to your pipeline, ensure the latest function revision is selected under `Function Deployment`, and click **Deploy**.
+> **Hint:** We covered function revisions in Lab 2 Step 1a. Navigate to **DataEngine UI > Functions > `$USER-s3-llm-summary` > Revision Details** and update the `Image Tag` to `v2`. Then open your pipeline in the **Pipeline Builder**, ensure the latest function revision is selected under **Function Deployment**, and click **Deploy**.
 
 ---
 
@@ -367,9 +388,7 @@ You should see the full pipeline run logged:
 
 ## Key Takeaways
 
-- **Environment variables** configure the function's runtime behaviour; set on the pipeline
 - **ctx.secrets** stores sensitive credentials separately from code and config; never log secret values, only whether they are set
-- **init/handler separation** keeps expensive setup (clients, connections) out of the hot path; `init()` runs once, `handler()` runs on every event
 - **llm_summary()** takes file content and returns a plain text summary; the model and token limit are configurable via env vars
 
 ---
