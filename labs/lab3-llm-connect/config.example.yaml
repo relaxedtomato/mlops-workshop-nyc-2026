@@ -1,5 +1,5 @@
 # S3 Configuration
-S3_ENDPOINT_URL: "<your-s3-endpoint>"
+S3_ENDPOINT_URL: "http://<your-s3-endpoint>"
 S3_REGION: "<your-region>"
 
 # LLM Configuration

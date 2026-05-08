@@ -1,17 +1,15 @@
 # S3 Configuration
-S3_ENDPOINT_URL: "http://<your-s3-endpoint>"
+S3_ENDPOINT_URL: "<your-s3-endpoint>"
 S3_REGION: "<your-region>"
-OUTPUT_BUCKET: "$USER-video-segments"
-SEGMENT_DURATION: "5"
 
-# VLM Configuration (used in Lab 5 — set now so the pipeline does not need reconfiguring)
+# VLM Configuration
 VLM_ENDPOINT: "<your-vlm-endpoint>"
 VISION_MODEL: "<your-vision-model>"
 EMBEDDING_MODEL: "<your-embedding-model>"
 SUMMARY_MODEL: ""
 MAX_TOKENS: "512"
 
-# VastDB Configuration (used in Lab 5 — set now so the pipeline does not need reconfiguring)
+# VastDB Configuration
 VASTDB_ENDPOINT: "<your-vastdb-endpoint>"
 VASTDB_BUCKET: "<your-vastdb-bucket>"
 VASTDB_SCHEMA: "video_embeddings"

@@ -3,7 +3,6 @@ import math
 import os
 import tempfile
 
-from moviepy.editor import VideoFileClip
 from common.handler_utils import parse_s3_event
 from common.config_utils import validate_config
 from common.s3_client import init_s3_client, download_object

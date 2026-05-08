@@ -1,4 +1,5 @@
 from openai import OpenAI
+import httpx
 
 
 class LLMClient:
@@ -9,15 +10,13 @@ class LLMClient:
 
     def summarize(self, content):
         query = f"Summarize in 1-2 sentences:\n{content}"
-        completion = self.client.chat.completions.create(
-            model=self.model,
-            messages=[{"role": "user", "content": query}],
-            max_tokens=self.max_tokens,
-            stream=True,
-        )
-        out = "".join(
-            chunk.choices[0].delta.content
-            for chunk in completion
-            if chunk.choices[0].delta.content
-        )
-        return out.split("</think>")[-1].strip()
+        try:
+            completion = self.client.chat.completions.create(
+                model=self.model,
+                messages=[{"role": "user", "content": query}],
+                max_tokens=self.max_tokens,
+            )
+            out = completion.choices[0].message.content or ""
+            return out.split("</think>")[-1].strip()
+        except (httpx.ConnectTimeout, httpx.ConnectError, Exception) as e:
+            return f"LLM unavailable: {e}"

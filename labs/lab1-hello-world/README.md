@@ -2,7 +2,7 @@
 
 ## Overview
 
-Get acquainted with the DataEngine development flow: scaffold a function from scratch, understand the init/handler model, and deploy a scheduled pipeline end-to-end. Minimal coding; maximum platform familiarity.
+Get acquainted with the development flow: scaffold a function from scratch, understand the init/handler model, and deploy a scheduled pipeline end-to-end. Minimal coding; maximum platform familiarity.
 
 ```
   Schedule Trigger (every 5 min)
@@ -27,9 +27,10 @@ Get acquainted with the DataEngine development flow: scaffold a function from sc
 
 You've just joined the engineering team at **FrameIQ**, a startup building AI-powered video intelligence pipelines. Before touching any real data, you need to know how the platform works end-to-end. This lab walks you through the full flow using the simplest possible example.
 
-> All commands run on the **workshop VM** via the terminal in your browser. Nothing runs on your laptop.
 
 ## Steps
+
+> All commands run on the **workshop VM** via the terminal in your browser. Nothing runs on your laptop.
 
 ### Step 1: Scaffold a new function
 
@@ -39,32 +40,38 @@ You've just joined the engineering team at **FrameIQ**, a startup building AI-po
 vastde --help
 ```
 
-#### 1b. Scaffold a new function using your username as a prefix
+#### 1b. Let's scaffold a brand new function
+
+Before we jump into lab 1 let's understand how to create a function from scratch:
 
 ```sh
-vastde functions init python-pip $USER-hello-world
-cd $USER-hello-world
+cd labs/
+vastde functions init python-pip $USER-my-first-vast-function
+cd $USER-my-first-vast-function
 ```
 
 This generates the boilerplate directory:
 
 ```
-$USER-hello-world/
+cd $USER-my-first-vast-function/
+tree
 ├── main.py               ← your function logic
 ├── requirements.txt      ← Python dependencies
 ├── config.yaml           ← env vars for local dev
 └── pipeline-config.yaml  ← pipeline definition (trigger, function, links)
 ```
 
-> **Why $USER?** In a shared environment, prefixing with your username keeps your resources from colliding with others.
-
+> **Why $USER?** In a shared environment, prefixing with your username keeps your resources unique from others.
 ---
 
 ### Step 2: Write the greeting
 
+Now that we've gone over how to scaffold a function, let's jump into `/lab1` and work from there.
+
 Update `main.py`:
 
 ```python
+# main.py
 import os
 
 def init(ctx):
@@ -80,11 +87,10 @@ def handler(ctx, event):
 
 ### Step 3: Build and run locally
 
-> **TODO:** Add clear visual distinction throughout this lab (and all labs) between code to copy into a file vs. CLI commands to run in the terminal.
-
 Build the function image:
 
 ```sh
+# labs/lab1-hello-world/
 vastde functions build $USER-hello-world
 ```
 
@@ -102,6 +108,14 @@ Handlers File: main.py
 Build completed: $USER-hello-world:latest
 ```
 
+⏱️ This step takes a moment.
+
+Create your local config from the template:
+
+```sh
+cp config.example.yaml config.yaml
+```
+
 Then run locally:
 
 ```sh
@@ -110,13 +124,32 @@ vastde functions localrun $USER-hello-world -c config.yaml
 
 Expected output:
 
-```
-Function is starting on port 8080... Once ready, you can invoke it:
+```sh
+% vastde functions localrun $USER-hello-world -c config.yaml
+Running function 'workshop-hello-world:latest' as Docker container on port 8080
+Failed to load config from config.yaml: failed to read config file config.yaml: open config.yaml: no such file or directory
 
-2026-04-17 16:42:47 [INFO] Vast Runtime, Version: 0.1.0+edaa62cc6748
-2026-04-17 16:42:47 [INFO] Starting Vast Runtime
-2026-04-17 16:42:47 [INFO] Runtime is listening on port 8080
-2026-04-17 16:42:47 [INFO] Call Init Handler: init
+Function is starting on port 8080... Once ready, you can invoke it:
+In another terminal, run:
+
+  # Generate and send a test event:
+  vastde functions invoke --generate-event --url http://localhost:8080/
+
+  # Send a custom CloudEvent:
+  vastde functions invoke --event cloudevent.yaml --url http://localhost:8080/
+
+Press Ctrl+C to stop the function
+
+2026-05-07 02:33:32 [INFO] Vast Runtime, Version: 0.1.0+edaa62cc6748
+2026-05-07 02:33:32 [INFO] Starting Vast Runtime
+2026-05-07 02:33:32 [INFO] App Path: /workspace
+2026-05-07 02:33:32 [INFO] Handler: main.py
+2026-05-07 02:33:32 [WARNING] overriding custom non json response default response class
+2026-05-07 02:33:32 [INFO] Runtime is listening on port 8080
+2026-05-07 02:33:32 [INFO] Call Init Handler: init
+2026-05-07 02:33:32 [INFO] Initialized with greeting: Hello VAST Data
+2026-05-07 02:33:32 [INFO] Init Handler Completed, duration: 0:00:00.000053
+2026-05-07 02:33:32 [INFO] init handler completed in timestamp 2026-05-07 02:33:32.629215
 ```
 
 In a second terminal:
@@ -135,13 +168,29 @@ Event Type: vastdata.com:Element.ObjectCreated
 CloudEvent sent successfully (Status: 204)
 ```
 
+Going back to the first terminal to view the triggered event:
+```sh
+2026-05-07 02:35:14 [INFO] START EventId: 07b00d89-e511-4027-a5fd-f5cfc2cc128f, EventType: vastdata.com:Element.ObjectCreated, EventSource: vastdata.com:trigger1.d6a1c6a8-e70b-4268-80c8-9b539918d4eb, Timestamp: 1778121314.0327199
+2026-05-07 02:35:14 [INFO] Function invoked in timestamp 2026-05-07 02:35:14.035809
+2026-05-07 02:35:14 [INFO] event type: Element
+2026-05-07 02:35:14 [INFO] Starting running function in timestamp 2026-05-07 02:35:14.038024
+2026-05-07 02:35:14 [INFO] Received event: {'attributes': {'source': 'vastdata.com:trigger1.d6a1c6a8-e70b-4268-80c8-9b539918d4eb', 'id': '07b00d89-e511-4027-a5fd-f5cfc2cc128f', 'type': 'vastdata.com:Element.ObjectCreated', 'specversion': '1.0', 'time': '2026-05-06T22:35:13-04:00', 'subject': 'vastdata.com:kafka-view.default-topic', 'datacontenttype': 'application/json', 'dataschema': None, 'triggerext1': 'cli-generated', 'triggerext2': 'test-event'}, 'data': {'data': {'msg': 'hello'}, 'datacontenttype': 'application/json', 'id': '07b00d89-e511-4027-a5fd-f5cfc2cc128f', 'source': 'vastdata.com:trigger1.d6a1c6a8-e70b-4268-80c8-9b539918d4eb', 'specversion': '1.0', 'subject': 'vastdata.com:kafka-view.default-topic', 'time': '2026-05-06T22:35:13-04:00', 'triggerext1': 'cli-generated', 'triggerext2': 'test-event', 'type': 'vastdata.com:Element.ObjectCreated'}}
+2026-05-07 02:35:14 [INFO] Function returned: Hello VAST Data! in timestamp 2026-05-07 02:35:14.038550
+2026-05-07 02:35:14 [INFO] No sink URL configured
+2026-05-07 02:35:14 [INFO] END EventId: 07b00d89-e511-4027-a5fd-f5cfc2cc128f, Duration: 0.0067s, Response: <starlette.responses.Response object at 0x7ffffbfcc860>, Timestamp: 1778121314.0397043
+INFO:     192.168.65.1:25074 - "POST / HTTP/1.1" 204 No Content
+```
+
+> **Notice:** The `Received event:` log shows the full CloudEvent payload your function receives. In later labs, `data.Records` inside this payload will carry the S3 bucket name and object key. The `Function returned:` line shows what `handler()` returned. In later labs this becomes a structured dict passed to the next function in the pipeline.
+
 ---
 
 ### Step 4: Build, tag, and push
 
-> **TODO:** Document how registry env vars (`DE_REG_HOST`, `DE_REG_USER`, `DE_REG_NAME`) are provided and set up in the workshop environment.
+> **Note:** `DE_REG_HOST`, `DE_REG_USER`, and `DE_REG_NAME` are pre-set on your workshop VM. Run `env | grep DE_REG` to verify before pushing.
 
 ```sh
+# labs/lab1-hello-world/
 vastde functions build $USER-hello-world
 ```
 
@@ -167,6 +216,9 @@ Tag and push to the workshop registry:
 docker tag $USER-hello-world:latest $DE_REG_HOST/$DE_REG_USER/$USER-hello-world:latest
 docker push $DE_REG_HOST/$DE_REG_USER/$USER-hello-world:latest
 ```
+
+⏱️ This step takes a moment.
+
 ---
 
 ### Step 5: Create the function in DataEngine (CLI)
@@ -178,7 +230,13 @@ vastde functions create \
   --name $USER-hello-world \
   --container-registry $DE_REG_NAME \
   --artifact-source $DE_REG_USER/$USER-hello-world \
-  --image-tag v1
+  --image-tag latest
+```
+
+> **Tip:** If `vastde functions create` fails with a version conflict, verify the image tag exists locally before pushing:
+
+```sh
+docker images | grep hello-world
 ```
 
 Expected output:
@@ -215,6 +273,15 @@ Navigate to **DataEngine UI > Triggers > Create Trigger**.
 
 ![alt text](set-up-trigger.png)
 
+Fill in the following fields:
+
+| Field | Value |
+|---|---|
+| **Name** | `$USER-schedule-5m-trigger` |
+| **Trigger Type** | `Schedule` |
+| **Schedule** | `*/5 * * * *` |
+| **Description** | fires every 5 minutes |
+
 Verify via CLI:
 
 ```sh
@@ -237,6 +304,13 @@ Navigate to **DataEngine UI > Pipelines > Create Pipeline**:
 
 ![Create and deploy pipeline](pipeline-configuration.png)
 
+Fill in the following fields:
+
+| Field | Value |
+|---|---|
+| **Name** | `$USER-hello-world-pipeline` |
+| **Description** | A sample pipeline to print hello world on a schedule |
+
 Update the environment variables to include `GREETING` variable:
 
 ![Create and deploy pipeline](pipeline-environment.png)
@@ -245,12 +319,19 @@ Connect the trigger to the function to create the pipeline:
 
 ![Create and deploy pipeline](trigger-function-pipeline.png)
 
-Click deploy and wait for `Ready` status before proceeding.
+Click deploy and wait for `Running` status before proceeding.
+
+⏱️ This step takes a moment.
 
 You can also verify via CLI:
 
 ```sh
 vastde pipelines list | grep $USER
+```
+
+```sh
+vastde pipelines list | grep $USER
+workshop-cro...  Ready         A sample pipeline...  86854c6c-c2fe-4a5...  2026-05-07 ...
 ```
 
 ---
@@ -268,7 +349,8 @@ vastde logs tail $USER-hello-world-pipeline \
 Wait up to 5 minutes for the schedule to fire. You should see:
 
 ```
-2026-03-30 11:25:01.22 [$USER-hello-world] [INFO]  [user] Handler {'attributes': {'source': 'vastdata.com:schedule-5m-trigger...', 'type': 'vastdata.com:Schedule.TimerElapsed', 'specversion': '1.0', 'time': '2026-03-30T15:25:00...', 'cronschedule': '0 0/5 * ? * * *', ...}, 'data': {'message': 'Activating trigger by cron'}}
+2026-05-06 23:01:40.43 [workshop-hello-world] [INFO]  [user] Initialized with greeting: Hello VAST!
+2026-05-06 23:05:00.90 [workshop-hello-world] [INFO]  [user] Received event: {'attributes': {'source': 'vastdata.com:workshop-scheduler-5m-trigger.15473f0a-b257-4b76-ab18-be7aea172c25', 'id': 'efa7325c-3194-4e03-87f7-a66059b4e696', 'type': 'vastdata.com:Schedule.TimerElapsed', 'specversion': '1.0', 'time': '2026-05-07T03:05:00.808000+00:00', 'subject': 'mlops-broker.main', 'datacontenttype': 'application/json', 'dataschema': None, 'cronschedule': '0 0/5 * ? * * *', 'knativekafkaoffset': '0', 'knativekafkapartition': '12', 'partitionkey': 'efa7325c-3194-4e03-87f7-a66059b4e696', 'timerelapsedtimestamp': '2026-05-07T03:05:00.000523Z'}, 'data': {'message': 'Activating trigger by cron'}}
 ```
 
 ---

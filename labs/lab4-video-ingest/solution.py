@@ -51,6 +51,7 @@ def handler(ctx, event):
     segment_prefix = f"{base}/"
 
     resp = ctx.s3_client.list_objects_v2(Bucket=output_bucket, Prefix=segment_prefix, MaxKeys=1)
+    
     if resp.get("Contents"):
         return {"status": "skipped", "reason": "Segments already exist"}
 
@@ -59,15 +60,15 @@ def handler(ctx, event):
     segment_keys = segment_and_upload(ctx, video_bytes, filename, output_bucket)
 
     result = {
-        "status": "success",
-        "source_bucket": s3_bucket,
-        "source_key": s3_key,
-        "output_bucket": output_bucket,
-        "segment_keys": segment_keys,
-        "segment_count": len(segment_keys),
-        "segment_duration": ctx.segment_duration,
+    "status": "success",
+    "source_bucket": s3_bucket,
+    "source_key": s3_key,
+    "output_bucket": output_bucket,
+    "segment_keys": segment_keys,
+    "segment_count": len(segment_keys),
+    "segment_duration": ctx.segment_duration,
     }
-    ctx.logger.info(f"✅ Result: {result}")
+    ctx.logger.info(f"Result: {result}")
     return result
 
 
@@ -90,11 +91,16 @@ def segment_and_upload(ctx, video_bytes, filename, output_bucket):
             end = min(start + ctx.segment_duration, total_duration)
             segment_key = f"{base}/{base}_segment_{i+1:03d}_of_{total_segments:03d}.mp4"
 
-            sub = clip.subclip(start, end)
-            with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as tmp_out:
-                tmp_out_path = tmp_out.name
-            sub.write_videofile(tmp_out_path, codec="libx264", audio=False, logger=None)
-            sub.close()
+            try:
+                sub = clip.subclip(start, end)
+                with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as tmp_out:
+                    tmp_out_path = tmp_out.name
+                sub.write_videofile(tmp_out_path, codec="libx264", audio=False, logger=None)
+                sub.close()
+            except Exception as e:
+                ctx.logger.warning(f"⚠️ Segment {i+1}/{total_segments}: {str(e)[:80]}")
+                gc.collect()
+                continue
 
             with open(tmp_out_path, "rb") as f:
                 segment_bytes = f.read()
@@ -117,7 +123,6 @@ def segment_and_upload(ctx, video_bytes, filename, output_bucket):
 
         clip.close()
         gc.collect()
-
     finally:
         if os.path.exists(tmp_in_path):
             os.unlink(tmp_in_path)

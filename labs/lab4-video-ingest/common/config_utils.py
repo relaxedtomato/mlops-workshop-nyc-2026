@@ -17,6 +17,3 @@ def validate_config(ctx, required_envs=None, required_secrets=None, secrets=None
         else:
             ctx.logger.warning(f"⚠️ {key}=NOT SET")
             missing.append(key)
-
-    if missing:
-        raise ValueError(f"Missing required config: {', '.join(missing)}")

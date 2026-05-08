@@ -7,10 +7,8 @@ namespace: default
 manifest:
   config:
     environment_variables:
-      - name: GREETING
-        value: "Hello, World!"
       - name: S3_ENDPOINT_URL
-        value: "<your-s3-endpoint>"
+        value: "http://<your-s3-endpoint>"
       - name: S3_REGION
         value: "<your-region>"
       - name: LLM_ENDPOINT

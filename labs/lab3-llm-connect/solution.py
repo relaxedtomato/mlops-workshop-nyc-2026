@@ -32,21 +32,21 @@ def init(ctx):
     )
     ctx.logger.info("✅ S3 client initialized")
 
+    # LLM client
     ctx.llm_client = LLMClient(
         endpoint=os.environ.get('LLM_ENDPOINT'),
         api_key=secrets.get("LLM_API_KEY", ""),
-        model=os.environ.get('MODEL_NAME', 'gpt-4o-mini'),  # TODO: update default to workshop model
+        model=os.environ.get('MODEL_NAME', 'nvidia/llama-3.1-8b-instruct'),
         max_tokens=int(os.environ.get('MAX_TOKENS', '512')),
     )
     ctx.logger.info(f"✅ LLM client initialized → {os.environ.get('LLM_ENDPOINT')}")
-
 
 def handler(ctx, event):
     ctx.logger.info("ℹ️ Handler invoked")
 
     s3_bucket, s3_key = parse_s3_event(event)
     if not s3_bucket:
-        ctx.logger.warning("⚠️ No records found in event")
+        ctx.logger.warning("No records found in event")
         return
 
     ctx.logger.info(f"📦 Bucket: {s3_bucket}")
@@ -60,7 +60,6 @@ def handler(ctx, event):
     ctx.logger.info("🤖 Calling LLM for summary...")
     summary = llm_summary(ctx, content)
     ctx.logger.info(f"✅ Summary: {summary}")
-
     return {"bucket": s3_bucket, "key": s3_key, "summary": summary}
 
 
