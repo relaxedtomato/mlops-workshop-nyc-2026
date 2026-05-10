@@ -1,5 +1,6 @@
 import os
 import boto3
+from common.config_utils import validate_config
 from common.handler_utils import parse_s3_event
 from common.llm_client import LLMClient
 

@@ -1,6 +1,6 @@
 # Sample pipeline configuration
-# Before deploying, replace $USER with your username (`echo $USER`) and <kubernetes-cluster-vrn> with your cluster VRN.
-name: $USER-s3-llm-summary-pipeline
+# Before deploying, replace rbansal2 with your username (`echo rbansal2`) and <kubernetes-cluster-vrn> with your cluster VRN.
+name: rbansal2-s3-llm-summary-pipeline
 description: A sample pipeline to summarize a file on an S3 element created event
 kubernetes_cluster_vrn: <kubernetes-cluster-vrn>
 namespace: default
@@ -18,12 +18,12 @@ manifest:
       - name: MAX_TOKENS
         value: "512"
   triggers:
-    - name: $USER-s3-llm-summary-trigger
-      vrn: vast:dataengine:triggers:$USER-s3-llm-summary-trigger
+    - name: rbansal2-s3-llm-summary-trigger
+      vrn: vast:dataengine:triggers:rbansal2-s3-llm-summary-trigger
   function_deployments:
-    - name: $USER-s3-llm-summary
-      function_vrn: vast:dataengine:functions:$USER-s3-llm-summary
+    - name: rbansal2-s3-llm-summary
+      function_vrn: vast:dataengine:functions:rbansal2-s3-llm-summary
       revision: 1
   links:
-    - source: ["$USER-s3-llm-summary-trigger"]
-      destination: ["$USER-s3-llm-summary"]
+    - source: ["rbansal2-s3-llm-summary-trigger"]
+      destination: ["rbansal2-s3-llm-summary"]

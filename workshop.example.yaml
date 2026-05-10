@@ -1,0 +1,26 @@
+s3_endpoint: ""
+s3_access_key_id: ""
+s3_secret_access_key: ""
+s3_ssl_verify: false
+s3_bucket_labs: ""
+s3_bucket_video: ""
+s3_bucket_video_segments: ""
+
+vlm_endpoint: ""
+llm_model: ""
+vision_model: ""
+embedding_model: ""
+summary_model: ""
+llm_api_key: ""
+max_tokens: "512"
+
+vdb_endpoint: ""
+vdb_access_key_id: ""
+vdb_secret_access_key: ""
+vdb_ssl_verify: false
+vdb_bucket: ""
+vdb_schema: "video_embeddings"
+vdb_table: "segments"
+
+de_reg_host: ""
+de_reg_name: ""

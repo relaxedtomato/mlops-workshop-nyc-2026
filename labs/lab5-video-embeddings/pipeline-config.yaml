@@ -1,23 +1,23 @@
 # Reference config showing the desired pipeline end state after Step 4b.
-# Update your existing $USER-video-ingest-pipeline via the DataEngine UI
+# Update your existing rbansal2-video-ingest-pipeline via the DataEngine UI
 # to match this topology rather than creating a new pipeline.
-name: $USER-video-ingest-pipeline
-description: F2F pipeline that generates embeddings for video segments produced by $USER-s3-segment-video
+name: rbansal2-video-ingest-pipeline
+description: F2F pipeline that generates embeddings for video segments produced by rbansal2-s3-segment-video
 kubernetes_cluster_vrn: <kubernetes-cluster-vrn>
 namespace: default
 manifest:
   triggers:
-    - name: $USER-s3-segment-video-trigger
-      vrn: vast:dataengine:triggers:$USER-s3-segment-video-trigger
+    - name: rbansal2-s3-segment-video-trigger
+      vrn: vast:dataengine:triggers:rbansal2-s3-segment-video-trigger
   function_deployments:
-    - name: $USER-s3-segment-video
-      function_vrn: vast:dataengine:functions:$USER-s3-segment-video
+    - name: rbansal2-s3-segment-video
+      function_vrn: vast:dataengine:functions:rbansal2-s3-segment-video
       revision: 1
-    - name: $USER-s3-video-embeddings
-      function_vrn: vast:dataengine:functions:$USER-s3-video-embeddings
+    - name: rbansal2-s3-video-embeddings
+      function_vrn: vast:dataengine:functions:rbansal2-s3-video-embeddings
       revision: 1
   links:
-    - source: ["$USER-s3-segment-video-trigger"]
-      destination: ["$USER-s3-segment-video"]
-    - source: ["$USER-s3-segment-video"]
-      destination: ["$USER-s3-video-embeddings"]
+    - source: ["rbansal2-s3-segment-video-trigger"]
+      destination: ["rbansal2-s3-segment-video"]
+    - source: ["rbansal2-s3-segment-video"]
+      destination: ["rbansal2-s3-video-embeddings"]

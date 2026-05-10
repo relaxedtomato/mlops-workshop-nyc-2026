@@ -94,6 +94,8 @@ Build the function image:
 vastde functions build $USER-hello-world
 ```
 
+⏱️ This step takes a moment.
+
 Expected output:
 
 ```
@@ -108,12 +110,10 @@ Handlers File: main.py
 Build completed: $USER-hello-world:latest
 ```
 
-⏱️ This step takes a moment.
-
-Create your local config from the template:
+Create your local config from the template. Skip this step if `config.yaml` already exists (created by `setup.py`):
 
 ```sh
-cp config.example.yaml config.yaml
+cp -n config.example.yaml config.yaml
 ```
 
 Then run locally:
@@ -269,6 +269,10 @@ $USER-hello-world                                               cf82b693-5483-44
 
 ### Step 6: Create a scheduled trigger (UI)
 
+To load the UI, click on `Open VAST Data Cluster` and login using the `Lab Assets` received at the beginning:
+
+![alt text](vast-data-cluster.png)
+
 Navigate to **DataEngine UI > Triggers > Create Trigger**.
 
 ![alt text](set-up-trigger.png)
@@ -311,7 +315,7 @@ Fill in the following fields:
 | **Name** | `$USER-hello-world-pipeline` |
 | **Description** | A sample pipeline to print hello world on a schedule |
 
-Update the environment variables to include `GREETING` variable:
+Update the environment variables to include `GREETING` variable and click `Create/Update Pipeline`:
 
 ![Create and deploy pipeline](pipeline-environment.png)
 
@@ -319,7 +323,7 @@ Connect the trigger to the function to create the pipeline:
 
 ![Create and deploy pipeline](trigger-function-pipeline.png)
 
-Click deploy and wait for `Running` status before proceeding.
+Click `Deploy` and wait for `Running` status before proceeding.
 
 ⏱️ This step takes a moment.
 
@@ -357,11 +361,9 @@ Wait up to 5 minutes for the schedule to fire. You should see:
 
 ## Key Takeaways
 
-- **init/handler model**: `init()` runs once at cold start; `handler()` runs on every event
-- **ctx.logger**: the right way to emit logs; visible via `vastde logs tail`
-- **os.environ**: env vars are set on the pipeline, not the function
-- **$USER namespacing**: always prefix resource names in shared environments
-- **Pipeline = trigger + function + links**: the pipeline wires it all together
+- `init()` runs once at cold start; `handler()` runs on every event. Keep expensive setup in `init()`
+- Env vars are set on the pipeline, not hardcoded in the function; read them with `os.environ`
+- `ctx.logger` is the right way to emit logs; visible in real time via `vastde logs tail`
 
 ---
 

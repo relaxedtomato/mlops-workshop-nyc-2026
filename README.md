@@ -4,10 +4,11 @@
 
 ## What You'll Build
 
-An end-to-end video semantic search (VSS) pipeline on VAST DataEngine:
-- S3-triggered video ingestion (segmentation → VLM reasoning → embedding → VastDB write)
-- FastAPI search endpoint (embed query → vector search → LLM synthesis)
-- Optionally: one of three autonomous agents (triage, Q&A, or pipeline health monitor)
+A video semantic search pipeline on VAST DataEngine — from raw `.mp4` upload to natural language query results:
+
+- **Labs 1-3:** Deploy a serverless function, connect it to S3 events, and call an LLM
+- **Labs 4-5:** Segment uploaded videos, extract frames, generate descriptions and embeddings, store in VastDB
+- **(Bonus) Lab 6:** Query VastDB with a natural language prompt and return ranked video segments
 
 ## Schedule
 
@@ -18,8 +19,7 @@ An end-to-end video semantic search (VSS) pipeline on VAST DataEngine:
 | [Lab 3](labs/lab3-llm-connect/) | Read from S3 + LLM Summarize |
 | [Lab 4](labs/lab4-video-ingest/) | Video Ingest |
 | [Lab 5](labs/lab5-video-embeddings/) | VLM + VastDB |
-| Lab 6 | Search Endpoint |
-| CYOA | Agent Offramp |
+| [Lab 6](labs/lab6-video-search/) | Search Video |
 
 ## What You'll Learn
 
@@ -39,20 +39,28 @@ An end-to-end video semantic search (VSS) pipeline on VAST DataEngine:
 
 > **The lab environment is provided** — no local installs required. All tools (`vastde` CLI, Docker, Python 3.10+) are pre-configured on your workshop VM.
 
+## Reach out for Help
+We'll be right by if you need help!
+
+Also [join our Community](https://community.vastdata.com/c/workshop) and give a quick intro (tag `intro`) and share any questions you have (tag `help`).
+
 ## Verify Setup
+> All commands run on the **workshop VM** via the terminal in your browser. Nothing runs on your laptop.
+
 1. Load the workshop environment in your browser
+
+Click `Open workshop editor` to deploy the code editor in the browser:
+
+![alt text](workshop-editor.png)
+
 2. Open the terminal and run the following commands to ensure everything is connected:
 
 ```sh
 vastde --version #returns a value, so its defined
+vastde version v5.5.0-2144029
+```
 
-vastde config view # returns configs, not empty
-Tenant Name: mlops
-Username: mlops-admin
-Password: ***
-Builder Image URL: docker.selab.vastdata.com:5000/vast-builder:latest
-VMS URL: https://10.143.12.208/
-
+```sh
 vastde functions list # call is successful, `No functions available` returned
 No functions available
 ```
@@ -62,14 +70,36 @@ No functions available
   s3cmd ls # lists all available buckets
 ```
 
-4. Retrieve all environment variables to use within the labs.
+4. Re-create the `$USER-mlops-config.yaml` file in the root of `/mlops-workshop-nyc-2026`:
 
-> **TODO:** Provide a pre-filled `env.yaml` (or similar) that attendees can load into their shell session to set all required environment variables in one step. Sourcing a single file is easier than setting variables one by one.
+![Download configuration](download-config.png)
 
-> **TODO:** Add a per-lab env var checklist to each lab's README so attendees can confirm the variables they need are set before starting that lab.
+> The file will download to your local machine, so can be dropped into the coding editor manually (at the root level).
+
+5. Run the setup script to configure all labs with your credentials.
+
+```sh
+python3 setup.py
+```
+
+This generates `config.yaml`, `secrets.yaml`, and `.env` for each lab, writes a root `.env` with `DE_REG_HOST`, `DE_REG_USER`, `DE_REG_NAME`, and `USER`, and replaces `$USER` with your username in all pipeline configs. If the files already exist, they will not be overwritten.
+
+Then load the environment variables into your shell:
+
+```sh
+source .env
+```
+
+> Note that you will need to run this command `source .env` for each terminal you use for pushing function images
+
+6. Verify the registry variables are set before running any `docker` or `vastde` commands:
+
+```sh
+env | grep DE_REG
+```
 
 ## Resources
 
 - [Event page](https://luma.com/h8muplvs)
-- [VSS Blueprint](https://github.com/vast-data/vss-blueprint)
-- [VAST Community](https://community.vastdata.com/)
+- [Join the VAST Community](https://community.vastdata.com/c/workshop)
+- [Build on Vast: Resources for Builders](https://www.vastdata.com/platform/developers)

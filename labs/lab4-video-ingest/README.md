@@ -44,7 +44,7 @@ In this lab you'll implement the segmentation function that sits at the front of
 
 Your first task is to add a check so the function skips a video if its segments already exist, preventing duplicate work when the same file triggers the function more than once.
 
-#### 1a. Add the skip check in `handler()`
+#### Add the skip check in `handler()`
 
 Before the video download, add a check to skip processing if segments for this video already exist in the output bucket:
 
@@ -55,6 +55,7 @@ base = os.path.splitext(filename)[0]
 segment_prefix = f"{base}/"
 
 resp = ctx.s3_client.list_objects_v2(Bucket=output_bucket, Prefix=segment_prefix, MaxKeys=1)
+
 if resp.get("Contents"):
     return {"status": "skipped", "reason": "Segments already exist"}
 ```
@@ -73,8 +74,6 @@ Load the video from the temp file, calculate its total duration, and determine h
 
 ```python
 # labs/lab4-video-ingest/main.py
-from moviepy.editor import VideoFileClip
-
 clip = VideoFileClip(tmp_in_path)
 total_duration = clip.duration
 total_segments = math.ceil(total_duration / ctx.segment_duration)
@@ -92,16 +91,21 @@ for i in range(total_segments):
     end = min(start + ctx.segment_duration, total_duration)
     segment_key = f"{base}/{base}_segment_{i+1:03d}_of_{total_segments:03d}.mp4"
 
-    sub = clip.subclip(start, end)
-    with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as tmp_out:
-        tmp_out_path = tmp_out.name
     try:
+        sub = clip.subclip(start, end)
+        with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as tmp_out:
+            tmp_out_path = tmp_out.name
         sub.write_videofile(tmp_out_path, codec="libx264", audio=False, logger=None)
         sub.close()
-        with open(tmp_out_path, "rb") as f:
-            segment_bytes = f.read()
-    finally:
-        os.unlink(tmp_out_path)
+    except Exception as e:
+        ctx.logger.warning(f"⚠️ Segment {i+1}/{total_segments}: {str(e)[:80]}")
+        gc.collect()
+        continue
+
+    with open(tmp_out_path, "rb") as f:
+        segment_bytes = f.read()
+    os.unlink(tmp_out_path)
+    gc.collect()
 ```
 
 ---
@@ -156,7 +160,13 @@ Follow the same pattern as previous labs. Build, tag, and push:
 
 ```sh
 vastde functions build $USER-s3-segment-video
+```
+
+```sh
 docker tag $USER-s3-segment-video:latest $DE_REG_HOST/$DE_REG_USER/$USER-s3-segment-video:v1
+```
+
+```sh
 docker push $DE_REG_HOST/$DE_REG_USER/$USER-s3-segment-video:v1
 ```
 
@@ -182,11 +192,11 @@ Create a new S3 element trigger. Navigate to **DataEngine UI > Manage Elements >
 | **Element Type** | `Element Created` |
 | **Description** | fires when a new video file is uploaded |
 
-Before deploying, set up your config and secrets. Copy the templates and fill in your values:
+Before deploying, set up your config and secrets. Skip any file that already exists (created by `setup.py`):
 
 ```sh
-cp config.example.yaml config.yaml
-cp secrets.example.yaml secrets.yaml
+cp -n config.example.yaml config.yaml
+cp -n secrets.example.yaml secrets.yaml
 ```
 
 In `config.yaml`:
@@ -237,11 +247,23 @@ Add the environment variables from `config.yaml` under `Environment Variables` a
 
 > **Note:** If the `.yaml` file upload does not work in the UI, copy the values manually.
 
+Once configured, $USER-s3-segment-video-trigger --> $USER-s3-segment-video connected, click Deploy and wait for pipeline changes from `In Progress` --> `Running` status before proceeding.
+
 ⏱️ This step takes a moment.
 
 #### 4c. Upload a video and tail the logs
 
-> **Note:** `sample.mp4` is not included in this repository. Video files are excluded from version control for licensing and distribution reasons. Do not commit or share video files publicly. A sample video is pre-loaded on your workshop VM for testing purposes only.
+Download a sample video using one of the following (Pexels, free to use):
+
+> **Note:** Keep videos under 30 seconds, 640x360 or lower resolution, H.264 MP4 format. Each segment requires a VLM call in Lab 5 — longer or higher-resolution videos mean more segments, more memory, and more wait time.
+
+```sh
+# Option 1
+curl -L -o sample.mp4 "https://www.pexels.com/download/video/29598934/?fps=30.0&h=360&w=640"
+
+# Option 2
+curl -L -o sample.mp4 "https://www.pexels.com/download/video/29825273/?fps=30.0&h=360&w=640"
+```
 
 Before uploading, confirm the pipeline is in `Ready` status:
 
@@ -269,6 +291,8 @@ vastde logs tail $USER-video-ingest-pipeline \
   --since 5m
 ```
 
+⏱️ This step takes a moment.
+
 You should see:
 
 ```
@@ -287,13 +311,13 @@ s3cmd ls s3://$USER-video-segments/
 Expected output:
 
 ```
-DIR  s3://$USER-video-segments/sample_30s/
+DIR  s3://$USER-video-segments/sample/
 ```
 
 Drill into the prefix to see the individual segments:
 
 ```sh
-s3cmd ls s3://$USER-video-segments/sample_30s/
+s3cmd ls s3://$USER-video-segments/sample/
 ```
 
 Expected output:
@@ -311,11 +335,9 @@ Expected output:
 
 ## Key Takeaways
 
-- **Idempotency matters**: checking for existing segments before processing prevents duplicate uploads when the same S3 event fires more than once
-- **Tempfiles for video processing**: moviepy needs a real file path, not a byte stream; writing to a tempfile and cleaning up after each segment keeps memory bounded
-- **S3 metadata**: each segment carries `original-video`, `segment-number`, and `total-segments` as object metadata, making it queryable without reading the file
-- **Function-to-function chaining**: the structured return dict (`segment_keys`, `segment_count`) is the contract for Lab 5; what this function returns is what the VLM function receives as input
-- **Segment key layout**: `{base}/{base}_segment_001_of_006.mp4` groups all segments under a per-video prefix, making it easy to list or delete a full set with one S3 command
+- Check for existing output before processing as a precaution if the same S3 event fires more than once
+- Video processing needs real file paths: write to a tempfile, process, clean up
+- The return value of your function is the input to the next function in the pipeline
 
 ---
 

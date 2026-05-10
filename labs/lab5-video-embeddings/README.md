@@ -232,7 +232,7 @@ Navigate to **DataEngine UI > Pipelines** and open your `$USER-video-ingest-pipe
 
 Add `$USER-s3-video-embeddings` as a new function and wire the function-to-function link from `$USER-s3-segment-video` to `$USER-s3-video-embeddings`. See `pipeline-config.yaml` in this directory for the full configuration.
 
-> **TODO:** Add GIF/screenshot of the pipeline edit view showing both functions connected with the f2f link.
+![Function to function pipeline](function-to-function.png)
 
 Deploy the updated pipeline from the UI.
 
@@ -282,12 +282,10 @@ You should see:
 
 ## Key Takeaways
 
-- **Function-to-function chaining**: this function receives its input directly from the upstream `$USER-s3-segment-video` return value; no S3 trigger needed, the pipeline wires them together
-- **Frame extraction over full video**: the vision model used in this workshop accepts images, not raw video; sampling 3 evenly spaced frames captures enough visual context without sending the entire clip
-- **Vision model quirks**: some models output to `reasoning` instead of `content`; always guard with a fallback to avoid silent empty descriptions
-- **Embeddings as meaning**: the 1024-dimension vector captures the semantic content of the description; similar scenes produce similar vectors, enabling search by meaning rather than filename
-- **VastDB**: stores structured data alongside vector embeddings in one place, purpose-built for vector similarity queries at scale
+- The vision model accepts images, not raw video. Extract 3 evenly spaced frames per segment as JPEG bytes
+- Embeddings turn text descriptions into vectors; similar scenes produce similar vectors
+- VastDB stores structured data and vectors together, ready for similarity queries
 
 ---
 
-**Next up: [Lab 6: Search Endpoint](../lab6-search-endpoint/)**
+**Next up: [Lab 6: Search Video](../lab6-video-search/)**

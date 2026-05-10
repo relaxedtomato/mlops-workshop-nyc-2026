@@ -5,7 +5,7 @@
 Build a function that reads an incoming S3 event, fetches the triggered file from your bucket, and summarizes its contents using an LLM.
 
 ```
-  S3 Bucket [s3://$USER-lab]
+  S3 Bucket [s3://$USER-labs]
       │ (file upload)
       ▼
   Element Trigger
@@ -61,10 +61,10 @@ def handler(ctx, event):
 
 #### 1b. Test locally
 
-Create your local config from the template:
+Create your local config from the template. Skip this step if `config.yaml` already exists (created by `setup.py`):
 
 ```sh
-cp config.example.yaml config.yaml
+cp -n config.example.yaml config.yaml
 ```
 
 Build the function image:
@@ -113,7 +113,6 @@ The `common/config_utils.py` file is provided in this lab directory. It contains
 import boto3
 import os
 
-# don't forget to import validate_config
 from common.config_utils import validate_config
 
 def init(ctx):
@@ -164,10 +163,12 @@ Before deploying, set up all environment variables and secrets now (both S3 and 
 
 Copy the config template and fill in your values:
 
-> **Note:** S3 and LLM credentials are pre-configured on the workshop VM. Run `env | grep S3` and `env | grep LLM` to see the values before filling in `config.yaml` and `secrets.yaml`.
+> **Note:** S3 and LLM credentials are available in the labs overview page.
+
+Skip this step if `config.yaml` already exists (created by `setup.py`):
 
 ```sh
-cp config.example.yaml config.yaml
+cp -n config.example.yaml config.yaml
 ```
 
 Update `config.yaml`:
@@ -185,10 +186,10 @@ MAX_TOKENS: "512"
 
 **Secrets**
 
-Copy the secrets template and fill in your values:
+Copy the secrets template and fill in your values. Skip this step if `secrets.yaml` already exists (created by `setup.py`):
 
 ```sh
-cp secrets.example.yaml secrets.yaml
+cp -n secrets.example.yaml secrets.yaml
 ```
 
 Update `secrets.yaml`:
@@ -249,7 +250,7 @@ Create a new S3 element trigger for this pipeline. Navigate to **DataEngine UI >
 |---|---|
 | **Name** | `$USER-s3-llm-summary-trigger` |
 | **Trigger Type** | `Element` |
-| **Source View** | select your `$USER-lab` bucket |
+| **Source View** | select your `$USER-labs` bucket |
 | **Element Type** | `Element Created` |
 
 **Pipeline**
@@ -267,6 +268,8 @@ When setting up the pipeline, add the environment variables from `config.yaml` u
 
 > **Note:** If the `.yaml` file upload does not work in the UI, you can copy the values manually from `config.yaml` and `secrets.yaml`.
 
+![Pipeline secrets](pipeline-secrets.png)
+
 Once configured, `$USER-s3-llm-summary-trigger` --> `$USER-s3-llm-summary` connected, click **Deploy** and wait for pipeline changes from `In Progress` --> `Running` status before proceeding.
 
 ⏱️ This step takes a moment.
@@ -276,13 +279,13 @@ Once configured, `$USER-s3-llm-summary-trigger` --> `$USER-s3-llm-summary` conne
 Upload the sample file to your S3 bucket:
 
 ```sh
-s3cmd put ./sample.txt s3://$USER-lab/sample.txt
+s3cmd put ./sample.txt s3://$USER-labs/sample.txt
 ```
 
 Expected output:
 
 ```
-upload: './sample.txt' -> 's3://$USER-lab/sample.txt'  [1 of 1]
+upload: './sample.txt' -> 's3://$USER-labs/sample.txt'  [1 of 1]
 done
 ```
 
@@ -387,32 +390,46 @@ Build and push the updated image:
 
 ```sh
 vastde functions build $USER-s3-llm-summary
+```
+
+```
 docker tag $USER-s3-llm-summary:latest $DE_REG_HOST/$DE_REG_USER/$USER-s3-llm-summary:v2
+```
+
+```
 docker push $DE_REG_HOST/$DE_REG_USER/$USER-s3-llm-summary:v2
 ```
 
-⏱️ This step takes a moment.
+⏱️ Thes step takes a moment.
 
 > Note that we are using `v2` for the image tag, since this is the second iteration of the function
 
-Then update the pipeline deployed function revision in the UI.
+Next let's update the pipeline deployed function revision in the UI. We covered function revisions in the previous lab. These two steps are required for updating a function before re-deploying the pipeline:
 
-> **Hint:** We covered function revisions in the previous lab. These two steps are required for updating a function before re-deploying the pipeline: 1) Navigate to **DataEngine UI > Functions > `$USER-s3-llm-summary` > Revision Details** and update the `Image Tag` to `v2` (or the latest version you want to deploy). 2)Open your pipeline in the **Pipeline Builder**, ensure the latest function revision is selected under **Function Deployment** (select the function and update the version), and click **Deploy**.
+1) Navigate to **DataEngine UI > Functions > `$USER-s3-llm-summary` > Revision Details** and update the `Image Tag` to `v2` (or the latest version you want to deploy).
+
+2) Open your pipeline in the **Pipeline Builder**, ensure the latest function revision is selected under **Function Deployment** (select the function and update the version), and click **Deploy**.
 
 ---
 
 ### Step 4: Verify end to end
 
+Before uploading, confirm the pipeline is in `Ready` status:
+
+```sh
+vastde pipelines list | grep $USER
+```
+
 Upload the sample text file to your S3 bucket to trigger the pipeline:
 
 ```sh
-s3cmd put ./sample.txt s3://$USER-lab/sample.txt
+s3cmd put ./sample.txt s3://$USER-labs/sample.txt
 ```
 
 Expected output:
 
 ```
-upload: './sample.txt' -> 's3://$USER-lab/sample.txt'  [1 of 1]
+upload: './sample.txt' -> 's3://$USER-labs/sample.txt'  [1 of 1]
 done
 ```
 
@@ -426,22 +443,24 @@ vastde logs tail $USER-s3-llm-summary-pipeline \
 
 You should see the full pipeline run logged:
 
-```
-2026-04-26 16:04:04.08 [$USER-s3-llm-summar...] [INFO]  [user] ℹ️ Handler invoked
-2026-04-26 16:04:04.08 [$USER-s3-llm-summar...] [INFO]  [user] 📦 Bucket: *$USER-lab*
-2026-04-26 16:04:04.08 [$USER-s3-llm-summar...] [INFO]  [user] 📄 Key: sample.txt
-2026-04-26 16:04:04.08 [$USER-s3-llm-summar...] [INFO]  [user] ⬇️ Fetching file from S3...
-2026-04-26 16:04:04.11 [$USER-s3-llm-summar...] [INFO]  [user] ✅ File fetched — size: 1120 bytes, type: text/plain
-2026-04-26 16:04:04.11 [$USER-s3-llm-summar...] [INFO]  [user] 🤖 Calling LLM for summary...
-2026-04-26 16:04:29.63 [$USER-s3-llm-summar...] [INFO]  [user] ✅ Summary: The given text appears to be a passage of Lorem Ipsum...
-```
+<pre>
+2026-05-11 11:52:57.63 [$USER-s3-llm-summary] [INFO]  [user] ℹ️ Handler invoked
+2026-05-11 11:52:57.63 [$USER-s3-llm-summary] [INFO]  [user] 📦 Bucket: $USER-labs
+2026-05-11 11:52:57.63 [$USER-s3-llm-summary] [INFO]  [user] 📄 Key: sample.txt
+2026-05-11 11:52:57.63 [$USER-s3-llm-summary] [INFO]  [user] ⬇️ Fetching file from S3...
+2026-05-11 11:52:57.64 [$USER-s3-llm-summary] [INFO]  [user] ✅ File fetched — size: 1120 bytes, type: text/plain
+2026-05-11 11:52:57.64 [$USER-s3-llm-summary] [INFO]  [user] 🤖 Calling LLM for summary...
+2026-05-11 11:52:59.41 [$USER-s3-llm-summary] [INFO]  [user] ✅ Summary: Here is a 1-2 sentence summary:
+
+This text appears to be a fragment of a sample text, commonly known as "Lorem ipsum," used as a placeholder in design and publishing. The text contains a mix of words and phrases that resemble Latin but are actually nonsense, used to test typography and layout.
+</pre>
 
 ---
 
 ## Key Takeaways
 
-- **ctx.secrets** stores sensitive credentials separately from code and config; never log secret values, only whether they are set
-- **llm_summary()** takes file content and returns a plain text summary; the model and token limit are configurable via env vars
+- `ctx.secrets` keeps credentials out of code and config
+- Processing S3 events with an LLM turns raw file uploads into real-time, queryable information
 
 ---
 

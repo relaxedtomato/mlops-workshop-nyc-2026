@@ -1,6 +1,6 @@
 # Sample pipeline configuration
-# Before deploying, replace $USER with your username (`echo $USER`) and <kubernetes-cluster-vrn> with your cluster VRN.
-name: $USER-video-ingest-pipeline
+# Before deploying, replace rbansal2 with your username (`echo rbansal2`) and <kubernetes-cluster-vrn> with your cluster VRN.
+name: rbansal2-video-ingest-pipeline
 description: S3-triggered pipeline that segments uploaded .mp4 files into 5-second clips
 kubernetes_cluster_vrn: <kubernetes-cluster-vrn>
 namespace: default
@@ -12,7 +12,7 @@ manifest:
       - name: S3_REGION
         value: "<your-region>"
       - name: OUTPUT_BUCKET
-        value: "$USER-video-segments"
+        value: "rbansal2-video-segments"
       - name: SEGMENT_DURATION
         value: "5"
       - name: VLM_ENDPOINT
@@ -34,12 +34,12 @@ manifest:
       - name: VASTDB_TABLE
         value: "segments"
   triggers:
-    - name: $USER-s3-segment-video-trigger
-      vrn: vast:dataengine:triggers:$USER-s3-segment-video-trigger
+    - name: rbansal2-s3-segment-video-trigger
+      vrn: vast:dataengine:triggers:rbansal2-s3-segment-video-trigger
   function_deployments:
-    - name: $USER-s3-segment-video
-      function_vrn: vast:dataengine:functions:$USER-s3-segment-video
+    - name: rbansal2-s3-segment-video
+      function_vrn: vast:dataengine:functions:rbansal2-s3-segment-video
       revision: 1
   links:
-    - source: ["$USER-s3-segment-video-trigger"]
-      destination: ["$USER-s3-segment-video"]
+    - source: ["rbansal2-s3-segment-video-trigger"]
+      destination: ["rbansal2-s3-segment-video"]

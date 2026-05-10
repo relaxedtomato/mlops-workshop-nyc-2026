@@ -6,7 +6,7 @@ S3_REGION: "<your-region>"
 VLM_ENDPOINT: "<your-vlm-endpoint>"
 VISION_MODEL: "<your-vision-model>"
 EMBEDDING_MODEL: "<your-embedding-model>"
-SUMMARY_MODEL: ""
+SUMMARY_MODEL: "<your-summary-model>"
 MAX_TOKENS: "512"
 
 # VastDB Configuration

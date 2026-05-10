@@ -1,6 +1,6 @@
 # Sample pipeline configuration
-# Before deploying, replace $USER with your username (`echo $USER`)  and <kubernetes-cluster-vrn> with your cluster VRN.
-name: $USER-hello-world-pipeline
+# Before deploying, replace rbansal2 with your username (`echo rbansal2`)  and <kubernetes-cluster-vrn> with your cluster VRN.
+name: rbansal2-hello-world-pipeline
 description: A sample pipeline to print hello world on a schedule
 kubernetes_cluster_vrn: <kubernetes-cluster-vrn>
 namespace: default
@@ -10,12 +10,12 @@ manifest:
       - name: GREETING
         value: "Hello, World!"
   triggers:
-    - name: $USER-schedule-5m-trigger
-      vrn: vast:dataengine:triggers:$USER-schedule-5m-trigger
+    - name: rbansal2-schedule-5m-trigger
+      vrn: vast:dataengine:triggers:rbansal2-schedule-5m-trigger
   function_deployments:
-    - name: $USER-hello-world
-      function_vrn: vast:dataengine:functions:$USER-hello-world
+    - name: rbansal2-hello-world
+      function_vrn: vast:dataengine:functions:rbansal2-hello-world
       revision: 1
   links:
-      - source: ["$USER-schedule-5m-trigger"]
-        destination: ["$USER-hello-world"]
+      - source: ["rbansal2-schedule-5m-trigger"]
+        destination: ["rbansal2-hello-world"]

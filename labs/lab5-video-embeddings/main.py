@@ -4,12 +4,12 @@ import tempfile
 from io import BytesIO
 
 import pyarrow as pa
-import vastdb
 from moviepy.editor import VideoFileClip
 from PIL import Image
 
 from common.config_utils import validate_config
 from common.s3_client import init_s3_client
+from common.vastdb_client import init_vastdb_client, connect_vastdb
 from common.vlm_client import init_vlm_client
 
 
@@ -26,14 +26,7 @@ def init(ctx):
 
     ctx.s3_client = init_s3_client(ctx, secrets)
     ctx.vlm_client = init_vlm_client(ctx, secrets)
-
-    ctx.vastdb_endpoint = os.environ.get("VASTDB_ENDPOINT", "")
-    ctx.vastdb_bucket = os.environ.get("VASTDB_BUCKET", "")
-    ctx.vastdb_schema = os.environ.get("VASTDB_SCHEMA", "video_embeddings")
-    ctx.vastdb_table = os.environ.get("VASTDB_TABLE", "segments")
-    ctx.vastdb_access_key = secrets.get("VASTDB_ACCESS_KEY", "")
-    ctx.vastdb_secret_key = secrets.get("VASTDB_SECRET_KEY", "")
-    ctx.logger.info(f"✅ VastDB: {ctx.vastdb_endpoint}/{ctx.vastdb_bucket}")
+    init_vastdb_client(ctx, secrets)
 
 
 def handler(ctx, event):

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="796" height="220" viewBox="0 0 796 220">
+  <defs>
+    <style>
+      text { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      .h1  { font-size: 15px; font-weight: 700; fill: #0f172a; }
+      .sub { font-size: 11px; fill: #64748b; }
+      .ct  { font-size: 11px; font-weight: 600; fill: #1e293b; }
+      .cd  { font-size: 10px; fill: #94a3b8; }
+      .bt  { font-size: 9px; font-weight: 500; }
+    </style>
+    <filter id="cs" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#00000010"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="796" height="220" rx="12" fill="#f8fafc"/>
+
+  <!-- Header -->
+  <svg x="24" y="16" width="17" height="17" viewBox="0 0 24 24" fill="#0891b2">
+    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+  </svg>
+  <text x="47" y="29" class="h1">Retrieval &amp; Search</text>
+
+  <!-- Subtitle -->
+  <rect x="24" y="40" width="2" height="14" rx="1" fill="#e2e8f0"/>
+  <text x="32" y="51" class="sub">Query → Embed → Vector search → LLM → Results</text>
+
+  <!-- ── Card 0: User Query ── -->
+  <rect x="24" y="68" width="108" height="118" rx="10" fill="white" stroke="#e2e8f0" stroke-width="1" filter="url(#cs)"/>
+  <rect x="61" y="80" width="34" height="34" rx="8" fill="#ecfeff"/>
+  <svg x="69.5" y="88.5" width="17" height="17" viewBox="0 0 24 24" fill="#0891b2">
+    <path d="M3 10h11v2H3v-2zm0-2h11V6H3v2zm0 8h7v-2H3v2zm15.01-3.13l.71-.71c.39-.39 1.02-.39 1.41 0l.71.71c.39.39.39 1.02 0 1.41l-.71.71-2.12-2.12zm-.71.71l-5.3 5.3V21h2.12l5.3-5.3-2.12-2.12z"/>
+  </svg>
+  <text x="78" y="131" class="ct" text-anchor="middle">User Query</text>
+  <text x="78" y="144" class="cd" text-anchor="middle">Natural language</text>
+  <rect x="55" y="154" width="46" height="16" rx="8" fill="#f1f5f9" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="78" y="165" class="bt" fill="#475569" text-anchor="middle">Prompt</text>
+
+  <!-- Arrow → -->
+  <text x="142" y="131" font-size="13" fill="#cbd5e1" text-anchor="middle">→</text>
+
+  <!-- ── Card 1: Text Embedding ── -->
+  <rect x="152" y="68" width="108" height="118" rx="10" fill="white" stroke="#e2e8f0" stroke-width="1" filter="url(#cs)"/>
+  <rect x="189" y="80" width="34" height="34" rx="8" fill="#ecfeff"/>
+  <svg x="197.5" y="88.5" width="17" height="17" viewBox="0 0 24 24" fill="#0891b2">
+    <path d="M13 8.57c-.79 0-1.43.64-1.43 1.43s.64 1.43 1.43 1.43 1.43-.64 1.43-1.43-.64-1.43-1.43-1.43zM13 3C9.25 3 6.2 5.94 6.02 9.64L4.1 12.2c-.25.33-.01.8.4.8H6v3c0 1.1.9 2 2 2h1v3h7v-4.68c2.36-1.12 4-3.53 4-6.32 0-3.87-3.13-7-7-7z"/>
+  </svg>
+  <text x="206" y="131" class="ct" text-anchor="middle">Text Embedding</text>
+  <text x="206" y="144" class="cd" text-anchor="middle">Query → vector</text>
+  <rect x="190" y="154" width="32" height="16" rx="8" fill="#fefce8" stroke="#fef08a" stroke-width="1"/>
+  <text x="206" y="165" class="bt" fill="#854d0e" text-anchor="middle">LLM</text>
+
+  <!-- Arrow → -->
+  <text x="270" y="131" font-size="13" fill="#cbd5e1" text-anchor="middle">→</text>
+
+  <!-- ── Card 2: Hybrid Search ── -->
+  <rect x="280" y="68" width="108" height="118" rx="10" fill="white" stroke="#e2e8f0" stroke-width="1" filter="url(#cs)"/>
+  <rect x="317" y="80" width="34" height="34" rx="8" fill="#ecfeff"/>
+  <svg x="325.5" y="88.5" width="17" height="17" viewBox="0 0 24 24" fill="#0891b2">
+    <path d="M17 20.41L18.41 19 15 15.59 13.59 17 17 20.41zM7.5 8H11v5.59L5.59 19 7 20.41l6-6V8h3.5L12 3.5 7.5 8z"/>
+  </svg>
+  <text x="334" y="131" class="ct" text-anchor="middle">Hybrid Search</text>
+  <text x="334" y="144" class="cd" text-anchor="middle">Vector + metadata</text>
+  <rect x="316" y="154" width="36" height="16" rx="8" fill="#f1f5f9" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="334" y="165" class="bt" fill="#475569" text-anchor="middle">ADBC</text>
+
+  <!-- Arrow → -->
+  <text x="398" y="131" font-size="13" fill="#cbd5e1" text-anchor="middle">→</text>
+
+  <!-- ── Card 3: VastDB Query ── -->
+  <rect x="408" y="68" width="108" height="118" rx="10" fill="white" stroke="#e2e8f0" stroke-width="1" filter="url(#cs)"/>
+  <rect x="445" y="80" width="34" height="34" rx="8" fill="#ecfeff"/>
+  <svg x="453.5" y="88.5" width="17" height="17" viewBox="0 0 24 24" fill="#0891b2">
+    <path d="M2 20h20v-4H2v4zm2-3h2v2H4v-2zM2 4v4h20V4H2zm4 3H4V5h2v2zm-4 7h20v-4H2v4zm2-3h2v2H4v-2z"/>
+  </svg>
+  <text x="462" y="131" class="ct" text-anchor="middle">VastDB Query</text>
+  <text x="462" y="144" class="cd" text-anchor="middle">Vector search</text>
+  <rect x="440" y="154" width="44" height="16" rx="8" fill="#f1f5f9" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="462" y="165" class="bt" fill="#475569" text-anchor="middle">VastDB</text>
+
+  <!-- Arrow → -->
+  <text x="526" y="131" font-size="13" fill="#cbd5e1" text-anchor="middle">→</text>
+
+  <!-- ── Card 4: LLM Synthesis ── -->
+  <rect x="536" y="68" width="108" height="118" rx="10" fill="white" stroke="#e2e8f0" stroke-width="1" filter="url(#cs)"/>
+  <rect x="573" y="80" width="34" height="34" rx="8" fill="#ecfeff"/>
+  <svg x="581.5" y="88.5" width="17" height="17" viewBox="0 0 24 24" fill="#0891b2">
+    <path d="M19 9l1.25-2.75L23 5l-2.75-1.25L19 1l-1.25 2.75L15 5l2.75 1.25L19 9zm-7.5.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L17 12l-5.5-2.5zM19 15l-1.25 2.75L15 19l2.75 1.25L19 23l1.25-2.75L23 19l-2.75-1.25L19 15z"/>
+  </svg>
+  <text x="590" y="131" class="ct" text-anchor="middle">LLM Synthesis</text>
+  <text x="590" y="144" class="cd" text-anchor="middle">Summarize</text>
+  <rect x="574" y="154" width="32" height="16" rx="8" fill="#fefce8" stroke="#fef08a" stroke-width="1"/>
+  <text x="590" y="165" class="bt" fill="#854d0e" text-anchor="middle">LLM</text>
+
+  <!-- Arrow → -->
+  <text x="654" y="131" font-size="13" fill="#cbd5e1" text-anchor="middle">→</text>
+
+  <!-- ── Card 5: Video Results ── -->
+  <rect x="664" y="68" width="108" height="118" rx="10" fill="white" stroke="#e2e8f0" stroke-width="1" filter="url(#cs)"/>
+  <rect x="701" y="80" width="34" height="34" rx="8" fill="#ecfeff"/>
+  <svg x="709.5" y="88.5" width="17" height="17" viewBox="0 0 24 24" fill="#0891b2">
+    <path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z"/>
+  </svg>
+  <text x="718" y="131" class="ct" text-anchor="middle">Video Results</text>
+  <text x="718" y="144" class="cd" text-anchor="middle">Segments</text>
+  <rect x="706" y="154" width="24" height="16" rx="8" fill="#f1f5f9" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="718" y="165" class="bt" fill="#475569" text-anchor="middle">UI</text>
+
+</svg>

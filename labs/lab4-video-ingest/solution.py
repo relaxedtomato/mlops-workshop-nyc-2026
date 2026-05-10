@@ -60,13 +60,13 @@ def handler(ctx, event):
     segment_keys = segment_and_upload(ctx, video_bytes, filename, output_bucket)
 
     result = {
-    "status": "success",
-    "source_bucket": s3_bucket,
-    "source_key": s3_key,
-    "output_bucket": output_bucket,
-    "segment_keys": segment_keys,
-    "segment_count": len(segment_keys),
-    "segment_duration": ctx.segment_duration,
+        "status": "success",
+        "source_bucket": s3_bucket,
+        "source_key": s3_key,
+        "output_bucket": output_bucket,
+        "segment_keys": segment_keys,
+        "segment_count": len(segment_keys),
+        "segment_duration": ctx.segment_duration,
     }
     ctx.logger.info(f"Result: {result}")
     return result

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="924" height="220" viewBox="0 0 924 220">
+  <defs>
+    <style>
+      text { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      .h1  { font-size: 15px; font-weight: 700; fill: #0f172a; }
+      .sub { font-size: 11px; fill: #64748b; }
+      .ct  { font-size: 11px; font-weight: 600; fill: #1e293b; }
+      .cd  { font-size: 10px; fill: #94a3b8; }
+      .bt  { font-size: 9px; font-weight: 500; }
+    </style>
+    <filter id="cs" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#00000010"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="924" height="220" rx="12" fill="#f8fafc"/>
+
+  <!-- Header -->
+  <svg x="24" y="16" width="17" height="17" viewBox="0 0 24 24" fill="#0891b2">
+    <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+  </svg>
+  <text x="47" y="29" class="h1">Ingestion Pipeline</text>
+
+  <!-- Subtitle -->
+  <rect x="24" y="40" width="2" height="14" rx="1" fill="#e2e8f0"/>
+  <text x="32" y="51" class="sub">Video → S3 → Trigger → Segment → Reason → Embed → VastDB</text>
+
+  <!-- ── Card 0: Video Sources ── -->
+  <rect x="24" y="68" width="108" height="118" rx="10" fill="white" stroke="#e2e8f0" stroke-width="1" filter="url(#cs)"/>
+  <rect x="61" y="80" width="34" height="34" rx="8" fill="#ecfeff"/>
+  <svg x="69.5" y="88.5" width="17" height="17" viewBox="0 0 24 24" fill="#0891b2">
+    <path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z"/>
+  </svg>
+  <text x="78" y="131" class="ct" text-anchor="middle">Video Sources</text>
+  <text x="78" y="144" class="cd" text-anchor="middle">Upload / S3</text>
+  <rect x="64" y="154" width="28" height="16" rx="8" fill="#f1f5f9" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="78" y="165" class="bt" fill="#475569" text-anchor="middle">S3</text>
+
+  <!-- Arrow → -->
+  <text x="142" y="131" font-size="13" fill="#cbd5e1" text-anchor="middle">→</text>
+
+  <!-- ── Card 1: VAST S3 ── -->
+  <rect x="152" y="68" width="108" height="118" rx="10" fill="white" stroke="#e2e8f0" stroke-width="1" filter="url(#cs)"/>
+  <rect x="189" y="80" width="34" height="34" rx="8" fill="#ecfeff"/>
+  <svg x="197.5" y="88.5" width="17" height="17" viewBox="0 0 24 24" fill="#0891b2">
+    <path d="M2 20h20v-4H2v4zm2-3h2v2H4v-2zM2 4v4h20V4H2zm4 3H4V5h2v2zm-4 7h20v-4H2v4zm2-3h2v2H4v-2z"/>
+  </svg>
+  <text x="206" y="131" class="ct" text-anchor="middle">VAST S3</text>
+  <text x="206" y="144" class="cd" text-anchor="middle">Object store</text>
+  <rect x="192" y="154" width="28" height="16" rx="8" fill="#f1f5f9" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="206" y="165" class="bt" fill="#475569" text-anchor="middle">S3</text>
+
+  <!-- Arrow → -->
+  <text x="270" y="131" font-size="13" fill="#cbd5e1" text-anchor="middle">→</text>
+
+  <!-- ── Card 2: Trigger ── -->
+  <rect x="280" y="68" width="108" height="118" rx="10" fill="white" stroke="#e2e8f0" stroke-width="1" filter="url(#cs)"/>
+  <rect x="317" y="80" width="34" height="34" rx="8" fill="#ecfeff"/>
+  <svg x="325.5" y="88.5" width="17" height="17" viewBox="0 0 24 24" fill="#0891b2">
+    <path d="M7 2v11h3v9l7-12h-4l4-8z"/>
+  </svg>
+  <text x="334" y="131" class="ct" text-anchor="middle">Trigger</text>
+  <text x="334" y="144" class="cd" text-anchor="middle">On upload</text>
+  <rect x="303" y="154" width="62" height="16" rx="8" fill="#fff7ed" stroke="#fed7aa" stroke-width="1"/>
+  <text x="334" y="165" class="bt" fill="#9a3412" text-anchor="middle">DataEngine</text>
+
+  <!-- Arrow → -->
+  <text x="398" y="131" font-size="13" fill="#cbd5e1" text-anchor="middle">→</text>
+
+  <!-- ── Card 3: Video Segmenter ── -->
+  <rect x="408" y="68" width="108" height="118" rx="10" fill="white" stroke="#e2e8f0" stroke-width="1" filter="url(#cs)"/>
+  <rect x="445" y="80" width="34" height="34" rx="8" fill="#ecfeff"/>
+  <svg x="453.5" y="88.5" width="17" height="17" viewBox="0 0 24 24" fill="#0891b2">
+    <path d="M9.64 7.64c.23-.5.36-1.05.36-1.64 0-2.21-1.79-4-4-4S2 3.79 2 6s1.79 4 4 4c.59 0 1.14-.13 1.64-.36L10 12l-2.36 2.36C7.14 14.13 6.59 14 6 14c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4c0-.59-.13-1.14-.36-1.64L12 14l7 7h3v-1L9.64 7.64zM6 8c-1.1 0-2-.89-2-2s.9-2 2-2 2 .89 2 2-.9 2-2 2zm0 12c-1.1 0-2-.89-2-2s.9-2 2-2 2 .89 2 2-.9 2-2 2zm6-7.5c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5zM19 3l-6 6 2 2 7-7V3z"/>
+  </svg>
+  <text x="462" y="131" class="ct" text-anchor="middle">Video Segmenter</text>
+  <text x="462" y="144" class="cd" text-anchor="middle">Split segments</text>
+  <rect x="431" y="154" width="62" height="16" rx="8" fill="#f1f5f9" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="462" y="165" class="bt" fill="#475569" text-anchor="middle">Serverless</text>
+
+  <!-- Arrow → -->
+  <text x="526" y="131" font-size="13" fill="#cbd5e1" text-anchor="middle">→</text>
+
+  <!-- ── Card 4: Video Reasoner ── -->
+  <rect x="536" y="68" width="108" height="118" rx="10" fill="white" stroke="#e2e8f0" stroke-width="1" filter="url(#cs)"/>
+  <rect x="573" y="80" width="34" height="34" rx="8" fill="#ecfeff"/>
+  <svg x="581.5" y="88.5" width="17" height="17" viewBox="0 0 24 24" fill="#0891b2">
+    <path d="M13 8.57c-.79 0-1.43.64-1.43 1.43s.64 1.43 1.43 1.43 1.43-.64 1.43-1.43-.64-1.43-1.43-1.43zM13 3C9.25 3 6.2 5.94 6.02 9.64L4.1 12.2c-.25.33-.01.8.4.8H6v3c0 1.1.9 2 2 2h1v3h7v-4.68c2.36-1.12 4-3.53 4-6.32 0-3.87-3.13-7-7-7z"/>
+  </svg>
+  <text x="590" y="131" class="ct" text-anchor="middle">Video Reasoner</text>
+  <text x="590" y="144" class="cd" text-anchor="middle">QWEN VLM</text>
+  <rect x="574" y="154" width="32" height="16" rx="8" fill="#fefce8" stroke="#fef08a" stroke-width="1"/>
+  <text x="590" y="165" class="bt" fill="#854d0e" text-anchor="middle">LLM</text>
+
+  <!-- Arrow → -->
+  <text x="654" y="131" font-size="13" fill="#cbd5e1" text-anchor="middle">→</text>
+
+  <!-- ── Card 5: Video Embedder ── -->
+  <rect x="664" y="68" width="108" height="118" rx="10" fill="white" stroke="#e2e8f0" stroke-width="1" filter="url(#cs)"/>
+  <rect x="701" y="80" width="34" height="34" rx="8" fill="#ecfeff"/>
+  <svg x="709.5" y="88.5" width="17" height="17" viewBox="0 0 24 24" fill="#0891b2">
+    <path d="M22 18v-2H8V4h2L7 1 4 4h2v2H2v2h4v8c0 1.1.9 2 2 2h8v2h-2l3 3 3-3h-2z"/>
+  </svg>
+  <text x="718" y="131" class="ct" text-anchor="middle">Video Embedder</text>
+  <text x="718" y="144" class="cd" text-anchor="middle">Vectors</text>
+  <rect x="702" y="154" width="32" height="16" rx="8" fill="#fefce8" stroke="#fef08a" stroke-width="1"/>
+  <text x="718" y="165" class="bt" fill="#854d0e" text-anchor="middle">LLM</text>
+
+  <!-- Arrow → -->
+  <text x="782" y="131" font-size="13" fill="#cbd5e1" text-anchor="middle">→</text>
+
+  <!-- ── Card 6: Ingest to VastDB ── -->
+  <rect x="792" y="68" width="108" height="118" rx="10" fill="white" stroke="#e2e8f0" stroke-width="1" filter="url(#cs)"/>
+  <rect x="829" y="80" width="34" height="34" rx="8" fill="#ecfeff"/>
+  <svg x="837.5" y="88.5" width="17" height="17" viewBox="0 0 24 24" fill="#0891b2">
+    <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/>
+  </svg>
+  <text x="846" y="131" class="ct" text-anchor="middle">Ingest to VastDB</text>
+  <text x="846" y="144" class="cd" text-anchor="middle">Vectors + metadata</text>
+  <rect x="815" y="154" width="62" height="16" rx="8" fill="#f1f5f9" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="846" y="165" class="bt" fill="#475569" text-anchor="middle">Serverless</text>
+
+</svg>

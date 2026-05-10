@@ -3,6 +3,7 @@ import math
 import os
 import tempfile
 
+from moviepy.editor import VideoFileClip
 from common.handler_utils import parse_s3_event
 from common.config_utils import validate_config
 from common.s3_client import init_s3_client, download_object
@@ -72,9 +73,9 @@ def segment_and_upload(ctx, video_bytes, filename, output_bucket):
         #                 Note: os.unlink(tmp_out_path) and gc.collect() are
         #                 already called after each iteration.
 
+
         # TODO (Step 3): Upload each segment to S3 with put_object and metadata.
         #                Append segment_key to segment_keys.
-
         clip.close()
         gc.collect()
     finally:
