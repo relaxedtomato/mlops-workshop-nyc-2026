@@ -140,12 +140,20 @@ if not description:
     continue
 
 embed_response = ctx.vlm_client.embeddings.create(
-    model=ctx.embedding_model,
-    input=description,
-    dimensions=1024,
-)
+        model=ctx.embedding_model,
+        input=description,
+        dimensions=1024,
+    )
 embedding = embed_response.data[0].embedding
+
 ctx.logger.info(f"Embedding: {len(embedding)} dimensions")
+
+if not embedding:                                                                                                     
+    ctx.logger.warning(f"Empty embedding for {segment_key} — skipping")
+    continue
+if len(embedding) != 1024:                                                                           
+    ctx.logger.warning(f"Embedding has {len(embedding)} dimensions — truncating/padding to 1024")
+    embedding = (embedding + [0.0] * 1024)[:1024]
 ```
 
 ---
@@ -156,12 +164,17 @@ Head over to the **DataEngine UI > Database > $USER-video-db** and confirm the V
 
 ![Create and deploy pipeline](vastdb-video-db.png)
 
+If not, run the following in the command line:
+
+```sh
+pip install vastdb pyarrow
+python setup_vastdb.py
+```
+
 Connect to VastDB and insert a row for each segment with its key, description, embedding, and metadata:
 
 ```python
 # labs/lab5-video-embeddings/main.py
-from common.vastdb_client import connect_vastdb
-
 vastdb_session = connect_vastdb(ctx)
 with vastdb_session.transaction() as tx:
     table = tx.bucket(ctx.vastdb_bucket).schema(ctx.vastdb_schema).table(ctx.vastdb_table)
