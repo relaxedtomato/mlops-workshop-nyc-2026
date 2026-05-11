@@ -61,7 +61,7 @@ def handler(ctx, event):
 
 #### 1b. Test locally
 
-Create your local config from the template. Skip this step if `config.yaml` already exists (created by `setup.py`):
+Create your local config from the template using `$USER-mlops-config.yaml`. Skip this step if `config.yaml` already exists (created by `setup.py`):
 
 ```sh
 cp -n config.example.yaml config.yaml

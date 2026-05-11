@@ -21,6 +21,7 @@ A video semantic search pipeline on VAST DataEngine — from raw `.mp4` upload t
 | [Lab 4](labs/lab4-video-ingest/) | Video Ingest |
 | [Lab 5](labs/lab5-video-embeddings/) | VLM + VastDB |
 | [Lab 6](labs/lab6-video-search/) | Search Video |
+| [Feedback](https://forms.gle/vwGigUtyxkvw9ZRUA) | Workshop Feedback |
 
 ## What You'll Learn
 

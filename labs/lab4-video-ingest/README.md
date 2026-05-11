@@ -192,7 +192,7 @@ Create a new S3 element trigger. Navigate to **DataEngine UI > Manage Elements >
 | **Element Type** | `Element Created` |
 | **Description** | fires when a new video file is uploaded |
 
-Before deploying, set up your config and secrets. Skip any file that already exists (created by `setup.py`):
+Before deploying, set up your config and secrets using `$USER-mlops-config.yaml`. Skip any file that already exists (created by `setup.py`):
 
 ```sh
 cp -n config.example.yaml config.yaml
