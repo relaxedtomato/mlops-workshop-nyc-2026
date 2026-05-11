@@ -14,6 +14,7 @@ A video semantic search pipeline on VAST DataEngine — from raw `.mp4` upload t
 
 | Lab | Title |
 |-----|-------|
+| [Lab Setup](#verify-setup) | Set up lab environment |
 | [Lab 1](labs/lab1-hello-world/) | Hello Vast Data |
 | [Lab 2](labs/lab2-s3-connect/) | Connect to S3 |
 | [Lab 3](labs/lab3-llm-connect/) | Read from S3 + LLM Summarize |

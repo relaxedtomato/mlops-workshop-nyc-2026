@@ -65,8 +65,8 @@ def segment_and_upload(ctx, video_bytes, filename, output_bucket):
         tmp_in_path = tmp_in.name
 
     try:
-        # TODO (Step 2a): Load the clip with VideoFileClip, calculate total_duration
-        #                 and total_segments, and log the video info.
+        # TODO (Step 2a): Load the clip with VideoFileClip(tmp_in_path, audio=False),
+        #                 calculate total_duration and total_segments, and log the video info.
 
         # TODO (Step 2b): Add the slice loop — subclip, write to tempfile,
         #                 read bytes.

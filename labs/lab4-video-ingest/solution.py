@@ -81,7 +81,7 @@ def segment_and_upload(ctx, video_bytes, filename, output_bucket):
         tmp_in_path = tmp_in.name
 
     try:
-        clip = VideoFileClip(tmp_in_path)
+        clip = VideoFileClip(tmp_in_path, audio=False)
         total_duration = clip.duration
         total_segments = math.ceil(total_duration / ctx.segment_duration)
         ctx.logger.info(f"Video: {total_duration:.2f}s -> {total_segments} x {ctx.segment_duration}s segments")
