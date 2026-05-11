@@ -61,7 +61,7 @@ VASTDB_SECRET_KEY=<your-secret-key>
 Load the variables:
 
 ```sh
-source .env
+export $(grep -v '^#' .env | xargs)
 ```
 
 ### Step 2: Run a search query
