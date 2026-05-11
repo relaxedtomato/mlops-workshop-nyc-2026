@@ -269,6 +269,7 @@ s3cmd rm s3://$USER-video-segments/ --recursive
 Upload a `.mp4` file to your input bucket to trigger the full Lab 4 + Lab 5 chain:
 
 ```sh
+# in /lab4-video-ingest (or where sample.mp4 exists)
 s3cmd put sample.mp4 s3://$USER-video/sample.mp4
 ```
 

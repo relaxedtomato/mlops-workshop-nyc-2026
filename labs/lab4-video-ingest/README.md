@@ -259,9 +259,11 @@ Download a sample video using one of the following (Pexels, free to use):
 
 ```sh
 # Option 1
+# in /lab4-video-ingest
 curl -L -o sample.mp4 "https://www.pexels.com/download/video/29598934/?fps=30.0&h=360&w=640"
 
 # Option 2
+# in /lab4-video-ingest
 curl -L -o sample.mp4 "https://www.pexels.com/download/video/29825273/?fps=30.0&h=360&w=640"
 ```
 
@@ -274,6 +276,7 @@ vastde pipelines list | grep $USER
 Upload the sample video to your S3 bucket:
 
 ```sh
+# in /lab4-video-ingest
 s3cmd put sample.mp4 s3://$USER-video/sample.mp4
 ```
 

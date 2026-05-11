@@ -279,6 +279,7 @@ Once configured, `$USER-s3-llm-summary-trigger` --> `$USER-s3-llm-summary` conne
 Upload the sample file to your S3 bucket:
 
 ```sh
+# in /lab3-llm-connect
 s3cmd put ./sample.txt s3://$USER-labs/sample.txt
 ```
 
@@ -423,6 +424,7 @@ vastde pipelines list | grep $USER
 Upload the sample text file to your S3 bucket to trigger the pipeline:
 
 ```sh
+# in /lab3-llm-connect
 s3cmd put ./sample.txt s3://$USER-labs/sample.txt
 ```
 

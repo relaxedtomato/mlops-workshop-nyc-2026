@@ -1,4 +1,4 @@
-# Lab 1: Hello Vast Data (20 min)
+# Lab 1: Hello VAST Data (20 min)
 
 ## Overview
 
@@ -80,7 +80,7 @@ def init(ctx):
 
 def handler(ctx, event):
     ctx.logger.info(f"Handler triggered: {event}")
-    return "Hello Vast Data"
+    return "Hello VAST Data"
 ```
 
 ---

@@ -154,6 +154,7 @@ vastde pipelines list | grep $USER
 Upload the sample file to your S3 bucket:
 
 ```sh
+# in /lab2-s3-connect
 s3cmd put ./sample.txt s3://$USER-labs/sample.txt
 ```
 
