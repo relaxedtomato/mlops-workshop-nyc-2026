@@ -76,7 +76,7 @@ No functions available
 
 ![Download configuration](download-config.png)
 
-> The file will download to your local machine, so can be dropped into the coding editor manually (at the root level).
+> Skip this step if `$USER-mlops-config.yaml` exists in the root of `/mlops-workshop-nyc-2026`. The file will download to your local machine, so can be dropped into the coding editor manually (at the root level).
 
 5. Run the setup script to configure all labs with your credentials.
 
